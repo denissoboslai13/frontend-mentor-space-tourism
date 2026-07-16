@@ -1,6 +1,7 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useMediaQuery } from 'react-responsive'
 
 import Logo from './assets/shared/logo.svg?react'
 import Hamburger from './assets/shared/icon-hamburger.svg?react'
@@ -35,7 +36,6 @@ function Header({ index, setIndex, sections, isAnimating }) {
 }
 
 const Home = ({ isAnimating, index, setIndex }) => {
-
   const handleClick = (i) => {
     if (isAnimating.current || i === index) return
     isAnimating.current = true
@@ -44,7 +44,7 @@ const Home = ({ isAnimating, index, setIndex }) => {
   }
 
   return (
-    <div className="bg-[url('./assets/home/background-home-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top">
+    <div className="bg-[url('./assets/home/background-home-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
       <div className='flex flex-col w-full items-center justify-center p-6 py-4 gap-30 mt-[96px] pt-2'>
         <div className='text-[#D0D6F9] w-full flex flex-col items-center justify-center text-center gap-2'>
           <p className='font-["Barlow_Condensed"] tracking-[0.2rem] text-[0.9rem]'>SO, YOU WANT TO TRAVEL TO</p>
@@ -59,7 +59,7 @@ const Home = ({ isAnimating, index, setIndex }) => {
 
 const Destination = () => {
   return (
-    <div className="bg-[url('./assets/destination/background-destination-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top">
+    <div className="bg-[url('./assets/destination/background-destination-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
       <div className='flex flex-col w-full items-center justify-center p-6 py-4 mt-[96px] gap-12 pt-2'>
         <div className='font-["Barlow_Condensed"] text-[0.9rem] flex flex-row gap-4 tracking-[0.2rem] text-white'>
           <p className='font-bold opacity-25'>01</p>
@@ -99,7 +99,7 @@ const Destination = () => {
 
 const Crew = () => {
   return (
-    <div className="bg-[url('./assets/crew/background-crew-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top">
+    <div className="bg-[url('./assets/crew/background-crew-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
       <div className='flex flex-col w-full items-center justify-center p-6 py-4 mt-[96px] gap-12 pt-2'>
         <div className='font-["Barlow_Condensed"] text-[0.9rem] flex flex-row gap-4 tracking-[0.2rem] text-white'>
           <p className='font-bold opacity-25'>02</p>
@@ -130,7 +130,7 @@ const Crew = () => {
 
 const Technology = () => {
   return (
-    <div className="bg-[url('./assets/technology/background-technology-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top">
+    <div className="bg-[url('./assets/technology/background-technology-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top pb-6">
       <div className='flex flex-col w-full items-center justify-center py-4 mt-[96px] gap-18 pt-2'>
         <div className='font-["Barlow_Condensed"] text-[0.9rem] flex flex-row gap-4 tracking-[0.2rem] text-white'>
           <p className='font-bold opacity-25'>03</p>
@@ -168,11 +168,15 @@ function App() {
   const indexRef = useRef(0)
   const isAnimating = useRef(false)
 
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
   useEffect(() => {
     indexRef.current = index
   }, [index])
 
   useEffect(() => {
+    if (isMobile) return
+
     const handleWheel = (e) => {
       if (isAnimating.current) return
 
@@ -188,7 +192,17 @@ function App() {
 
     window.addEventListener('wheel', handleWheel, { passive: true })
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [])
+  }, [isMobile])
+
+  if (isMobile) return (
+    <div className="flex flex-col w-full">
+      <Header index={index} setIndex={setIndex} sections={sections} isAnimating={isAnimating} /> 
+      {sections.map(({ Component }, i) => (
+        <Component isAnimating={isAnimating} index={index} setIndex={setIndex} isActive={i === index}/>
+      ))}
+    </div>
+  )
+
 
   return (
     <div className="fixed inset-0 overflow-hidden">
