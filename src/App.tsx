@@ -1,6 +1,6 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
 
 import Logo from './assets/shared/logo.svg?react'
@@ -9,6 +9,8 @@ import Hamburger from './assets/shared/icon-hamburger.svg?react'
 import moon from './assets/destination/image-moon.webp'
 import dh from './assets/crew/image-douglas-hurley.webp'
 import launchPort from './assets/technology/image-launch-vehicle-portrait.jpg'
+import capsulePort from './assets/technology/image-space-capsule-portrait.jpg'
+import spacePort from './assets/technology/image-spaceport-portrait.jpg'
 
 function Header({ index, setIndex, sections, isAnimating }) {
   const handleClick = (i) => {
@@ -128,7 +130,22 @@ const Crew = () => {
   )
 }
 
-const Technology = () => {
+const variants = {
+  initial: (direction: number) => ({
+    x: direction === 1 ? '100%' : direction === -1 ? '-100%' : 0,
+    y: direction === 0 ? '20%' : 0,
+  }),
+  animate: {
+    x: 0,
+    y: 0,
+  },
+  exit: (direction: number) => ({
+    x: direction === 1 ? '-100%' : direction === -1 ? '100%' : 0,
+    y: direction === 0 ? '-20%' : 0,
+  })
+}
+
+const Technology = ({ technologyVis, setTechnologyVis, direction, leftTechClick, rightTechClick }) => {
   return (
     <div className="bg-[url('./assets/technology/background-technology-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top pb-6">
       <div className='flex flex-col w-full items-center justify-center py-4 mt-[96px] gap-18 pt-2'>
@@ -137,13 +154,50 @@ const Technology = () => {
           <p>SPACE LAUNCH 101</p>
         </div>
         <div className='flex flex-col text-center items-center gap-8 w-full'>
-          <div className='h-[258px] w-full'>
-            <img src={launchPort} alt="" className='w-full h-full object-cover object-bottom'/>
+          <div className='h-[258px] w-full relative'>
+            <AnimatePresence custom={direction} initial={false}>
+            {technologyVis == 1 && (
+              <motion.img src={launchPort} alt=""
+                key={technologyVis} 
+                custom={direction}
+                variants={variants}
+                initial='initial'
+                animate='animate'
+                exit='exit'
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                className='absolute inset-0 w-full h-full object-cover'
+              />
+            )}
+            {technologyVis == 2 && (
+              <motion.img src={capsulePort} alt=""
+                key={technologyVis} 
+                custom={direction}
+                variants={variants}
+                initial='initial'
+                animate='animate'
+                exit='exit'
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                className='absolute inset-0 w-full h-full object-cover'
+              />
+            )}
+            {technologyVis == 3 && (
+              <motion.img src={spacePort} alt=""
+                key={technologyVis} 
+                custom={direction}
+                variants={variants}
+                initial='initial'
+                animate='animate'
+                exit='exit'
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                className='absolute inset-0 w-full h-full object-cover'
+              />
+            )}
+            </AnimatePresence>
           </div>
           <div className='flex flex-row gap-4'>
-            <div className='w-10 h-10 border border-white/25 rounded-full text-white flex items-center justify-center font-[Bellefair]'>1</div>
-            <div className='w-10 h-10 border border-white/25 rounded-full text-white flex items-center justify-center font-[Bellefair]'>2</div>
-            <div className='w-10 h-10 border border-white/25 rounded-full text-white flex items-center justify-center font-[Bellefair]'>3</div>
+            {[1, 2, 3].map(e => (
+              <button className={`${technologyVis == e ? "bg-white text-black" : "bg-none text-white"} w-10 h-10 border border-white/25 rounded-full flex items-center justify-center font-[Bellefair]`} onClick={technologyVis > e ? () => leftTechClick(e) : () => rightTechClick(e)}>{e}</button>
+            ))}
           </div>
           <div className='flex flex-col items-center text-center gap-2 px-8'>
             <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>THE TERMINOLOGY...</p>
@@ -165,10 +219,14 @@ const sections = [
 
 function App() {
   const [index, setIndex] = useState(0)
+  const [technologyVis, setTechnologyVis] = useState(1)
+  const [direction, setDirection] = useState(1)
   const indexRef = useRef(0)
   const isAnimating = useRef(false)
 
   const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  console.log(technologyVis)
 
   useEffect(() => {
     indexRef.current = index
@@ -194,11 +252,21 @@ function App() {
     return () => window.removeEventListener('wheel', handleWheel)
   }, [isMobile])
 
+  const leftTechClick = (i: number) => {
+    setDirection(-1)
+    setTechnologyVis(i)
+  }
+
+  const rightTechClick = (i: number) => {
+    setDirection(1)
+    setTechnologyVis(i)
+  }
+
   if (isMobile) return (
     <div className="flex flex-col w-full">
       <Header index={index} setIndex={setIndex} sections={sections} isAnimating={isAnimating} /> 
       {sections.map(({ Component }, i) => (
-        <Component isAnimating={isAnimating} index={index} setIndex={setIndex} isActive={i === index}/>
+        <Component isAnimating={isAnimating} index={index} setIndex={setIndex} isActive={i === index} technologyVis={technologyVis} setTechnologyVis={setTechnologyVis} direction={direction} rightTechClick={rightTechClick} leftTechClick={leftTechClick} />
       ))}
     </div>
   )
@@ -214,7 +282,7 @@ function App() {
       >
         {sections.map(({ Component }, i) => (
           <section key={i} className="h-screen w-full flex-shrink-0 flex">
-            <Component isAnimating={isAnimating} index={index} setIndex={setIndex} isActive={i === index}/>
+            <Component isAnimating={isAnimating} index={index} setIndex={setIndex} technologyVis={technologyVis} isActive={i === index}/>
           </section>
         ))}
       </motion.div>
