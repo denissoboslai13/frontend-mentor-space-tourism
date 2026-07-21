@@ -7,12 +7,18 @@ import Logo from './assets/shared/logo.svg?react'
 import Hamburger from './assets/shared/icon-hamburger.svg?react'
 
 import moon from './assets/destination/image-moon.webp'
+import mars from './assets/destination/image-mars.webp'
+import europa from './assets/destination/image-europa.webp'
+import titan from './assets/destination/image-titan.webp'
 import dh from './assets/crew/image-douglas-hurley.webp'
+import ms from './assets/crew/image-mark-shuttleworth.webp'
+import vg from './assets/crew/image-victor-glover.webp'
+import aa from './assets/crew/image-anousheh-ansari.webp'
 import launchPort from './assets/technology/image-launch-vehicle-portrait.jpg'
 import capsulePort from './assets/technology/image-space-capsule-portrait.jpg'
 import spacePort from './assets/technology/image-spaceport-portrait.jpg'
 
-function Header({ index, setIndex, sections, isAnimating }) {
+function MobileHeader({ index, setIndex, sections, isAnimating }) {
   const handleClick = (i) => {
     if (isAnimating.current || i === index) return
     isAnimating.current = true
@@ -21,7 +27,7 @@ function Header({ index, setIndex, sections, isAnimating }) {
   }
 
   return (
-    <header className="fixed top-0 left-0 z-10 flex flex-row p-6 w-full items-center justify-between">
+    <header className="absolute top-0 left-0 z-10 flex flex-row p-6 w-full items-center justify-between">
       {/* {sections.map(({ label }, i) => (
         <button
           key={i}
@@ -37,6 +43,32 @@ function Header({ index, setIndex, sections, isAnimating }) {
   )
 }
 
+const navs = ['HOME', 'DESTINATION', 'CREW', 'TECHNOLOGY']
+
+function DesktopHeader({ index, setIndex, sections, isAnimating }) {
+  const handleClick = (i) => {
+    if (isAnimating.current || i === index) return
+    isAnimating.current = true
+    setIndex(i)
+    setTimeout(() => { isAnimating.current = false }, 800)
+  }
+
+  return (
+    <header className="absolute top-12 left-0 pl-16 z-10 flex flex-row pr-0 w-full items-center justify-between">
+        <Logo viewBox="0 0 48 48"/>
+        <div className='absolute h-[1.5px] bg-white/33 left-45 right-180 z-55'></div>
+        <div className='flex flex-row gap-12 pr-16 pl-42 font-["Barlow_Condensed"] text-white bg-white/5 backdrop-blur-md tracking-[0.15rem]'>
+          {navs.map((e, i) => (
+            <button className={`${index == i ? "border-b-4 border-white" : "border-none"} flex flex-row gap-2 py-9 cursor-pointer`} onClick={() => handleClick(i)}>
+              <p>{'0' + i}</p>
+              <p className='font-light'>{e}</p>
+            </button>
+          ))}
+        </div>
+    </header>
+  )
+}
+
 const Home = ({ isAnimating, index, setIndex }) => {
   const handleClick = (i) => {
     if (isAnimating.current || i === index) return
@@ -46,87 +78,309 @@ const Home = ({ isAnimating, index, setIndex }) => {
   }
 
   return (
-    <div className="bg-[url('./assets/home/background-home-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
-      <div className='flex flex-col w-full items-center justify-center p-6 py-4 gap-30 mt-[96px] pt-2'>
-        <div className='text-[#D0D6F9] w-full flex flex-col items-center justify-center text-center gap-2'>
-          <p className='font-["Barlow_Condensed"] tracking-[0.2rem] text-[0.9rem]'>SO, YOU WANT TO TRAVEL TO</p>
-          <h1 className='text-white font-[Bellefair] text-[5rem]'>SPACE</h1>
-          <p className='font-[Barlow] text-[0.95rem] leading-7'>Let’s face it; if you want to go to space, you might as well genuinely go to outer space and not hover kind of on the edge of it. Well sit back, and relax because we’ll give you a truly out of this world experience!</p>
+    <section className="bg-[url('./assets/home/background-home-mobile.jpg')] lg:bg-[url('./assets/home/background-home-desktop.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6 lg:pb-0 lg:border-none">
+      <div className='flex flex-col lg:grid lg:grid-cols-[48%_auto] w-full items-center justify-center p-6 py-4 gap-30 mt-[96px] lg:px-40 lg:mt-[165px] pt-2 lg:fixed lg:bottom-22 lg:gap-0 lg:justify-between'>
+        <div className='text-[#D0D6F9] w-full flex flex-col items-center justify-center text-center gap-2 lg:text-left lg:items-start lg:gap-0'>
+          <p className='font-["Barlow_Condensed"] tracking-[0.2rem] text-[0.9rem] lg:text-[1.85rem]'>SO, YOU WANT TO TRAVEL TO</p>
+          <h1 className='text-white font-[Bellefair] text-[5rem] lg:text-[9rem] lg:leading-50'>SPACE</h1>
+          <p className='font-[Barlow] text-[0.95rem] leading-7 lg:text-[1.125rem] lg:leading-8 lg:mt-2'>Let’s face it; if you want to go to space, you might as well genuinely go to outer space and not hover kind of on the edge of it. Well sit back, and relax because we’ll give you a truly out of this world experience!</p>
         </div>
-        <button className='font-[Bellefair] bg-white w-36 h-36 rounded-full text-lg' onClick={() => handleClick(1)}>EXPLORE</button>
+        <button className='font-[Bellefair] bg-white w-36 h-36 lg:w-70 lg:h-70 rounded-full text-lg lg:text-3xl relative cursor-pointer hover:text-[#a3a3a3] transition duration-400' onClick={() => handleClick(1)}>
+          <p>EXPLORE</p>
+          <motion.div className='absolute -top-[30%] -bottom-[30%] -left-[30%] -right-[30%] bg-white/10 rounded-full scale-55'
+            whileHover={{
+              scale: 1.67,
+              transition: { duration: 0.4 }
+            }}     
+          />
+        </button>
       </div>
-    </div>
+    </section>
   )
 }
 
-const Destination = () => {
+const Destination = ({ destVis, setDestVis }) => {
   return (
-    <div className="bg-[url('./assets/destination/background-destination-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
+    <section className="bg-[url('./assets/destination/background-destination-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
       <div className='flex flex-col w-full items-center justify-center p-6 py-4 mt-[96px] gap-12 pt-2'>
         <div className='font-["Barlow_Condensed"] text-[0.9rem] flex flex-row gap-4 tracking-[0.2rem] text-white'>
           <p className='font-bold opacity-25'>01</p>
           <p>PICK YOUR DESTINATION</p>
         </div>
         <div className='flex flex-col gap-10'>
-          <div className='px-24'>
-            <img src={moon} alt="" />
+          <div className='px-24 flex flex-row items-center justify-center'>
+            <AnimatePresence mode='wait'>
+              {destVis == 1 && (
+                <motion.img src={moon} alt="" key={destVis}
+                  initial={{ opacity: 0, rotate: -100 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 100 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                />
+              )}
+              {destVis == 2 && (
+                <motion.img src={mars} alt="" key={destVis}
+                  initial={{ opacity: 0, rotate: -100 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 100 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                />
+              )}
+              {destVis == 3 && (
+                <motion.img src={europa} alt="" key={destVis}
+                  initial={{ opacity: 0, rotate: -100 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 100 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                />
+              )}
+              {destVis == 4 && (
+                <motion.img src={titan} alt="" key={destVis}
+                  initial={{ opacity: 0, rotate: -100 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 100 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                />
+              )}
+              
+            </AnimatePresence>
           </div>
           <div className='flex flex-col gap-4'>
-            <div className='flex flex-row font-["Barlow_Condensed"] text-[#D0D6F9] w-full items-center justify-center gap-8'>
-              <p>MOON</p>
-              <p>MARS</p>
-              <p>EUROPA</p>
-              <p>TITAN</p>
+            <div className='flex flex-row font-["Barlow_Condensed"] text-[#D0D6F9] w-full items-start justify-center gap-8 tracking-wider'>
+              {['MOON', 'MARS', 'EUROPA', 'TITAN'].map((e, i) => (
+                <button className={`${destVis == i+1 ? "border-b-3 text-white pb-2" : "border-none"} transition`} onClick={() => setDestVis(i+1)}>{e}</button>
+              ))}
             </div>
-            <div className='flex flex-col items-center text-center gap-2 border-b border-white/25 px-6 pb-6'>
-              <h1 className='text-white font-[Bellefair] text-[3.3rem]'>MOON</h1>
-              <p className='font-[Barlow] text-[0.85rem] leading-6 text-[#D0D6F9]'>See our planet as you’ve never seen it before. A perfect relaxing trip away to help regain perspective and come back refreshed. While you’re there, take in some history by visiting the Luna 2 and Apollo 11 landing sites.</p>
-            </div>
-            <div className='flex flex-col w-full items-center text-center gap-4'>
-              <div className='flex flex-col'>
-                <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>AVG. DISTANCE</p>
-                <p className='text-white font-[Bellefair] text-[1.8rem]'>384,400 KM</p>
-              </div>
-              <div>
-                <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>EST. TRAVEL TIME</p>
-                <p className='text-white font-[Bellefair] text-[1.8rem]'>3 DAYS</p>
-              </div>
-            </div>
+            <AnimatePresence initial={false} mode='wait'>
+              {destVis == 1 && (
+                <motion.div className='flex flex-col gap-4' key={destVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col items-center text-center gap-2 border-b border-white/25 px-6 pb-6'>
+                    <h2 className='text-white font-[Bellefair] text-[3.3rem]'>MOON</h2>
+                    <p className='font-[Barlow] text-[0.85rem] leading-6 text-[#D0D6F9]'>See our planet as you’ve never seen it before. A perfect relaxing trip away to help regain perspective and come back refreshed. While you’re there, take in some history by visiting the Luna 2 and Apollo 11 landing sites.</p>
+                  </div>
+                  <div className='flex flex-col w-full items-center text-center gap-4'>
+                    <div className='flex flex-col'>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>AVG. DISTANCE</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>384,400 KM</p>
+                    </div>
+                    <div>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>EST. TRAVEL TIME</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>3 DAYS</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {destVis == 2 && (
+                <motion.div className='flex flex-col gap-4' key={destVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col items-center text-center gap-2 border-b border-white/25 px-6 pb-6'>
+                    <h2 className='text-white font-[Bellefair] text-[3.3rem]'>MARS</h2>
+                    <p className='font-[Barlow] text-[0.85rem] leading-6 text-[#D0D6F9]'>Don’t forget to pack your hiking boots. You’ll need them to tackle Olympus Mons, the tallest planetary mountain in our solar system. It’s two and a half times the size of Everest!</p>
+                  </div>
+                  <div className='flex flex-col w-full items-center text-center gap-4'>
+                    <div className='flex flex-col'>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>AVG. DISTANCE</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>225 MIL. KM</p>
+                    </div>
+                    <div>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>EST. TRAVEL TIME</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>9 MONTHS</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {destVis == 3 && (
+                <motion.div className='flex flex-col gap-4' key={destVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col items-center text-center gap-2 border-b border-white/25 px-6 pb-6'>
+                    <h2 className='text-white font-[Bellefair] text-[3.3rem]'>EUROPA</h2>
+                    <p className='font-[Barlow] text-[0.85rem] leading-6 text-[#D0D6F9]'>The smallest of the four Galilean moons orbiting Jupiter, Europa is a winter lover’s dream. With an icy surface, it’s perfect for a bit of ice skating, curling, hockey, or simple relaxation in your snug wintery cabin.</p>
+                  </div>
+                  <div className='flex flex-col w-full items-center text-center gap-4'>
+                    <div className='flex flex-col'>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>AVG. DISTANCE</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>628 MIL. KM</p>
+                    </div>
+                    <div>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>EST. TRAVEL TIME</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>3 YEARS</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {destVis == 4 && (
+                <motion.div className='flex flex-col gap-4' key={destVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col items-center text-center gap-2 border-b border-white/25 px-6 pb-6'>
+                    <h2 className='text-white font-[Bellefair] text-[3.3rem]'>TITAN</h2>
+                    <p className='font-[Barlow] text-[0.85rem] leading-6 text-[#D0D6F9]'>The only moon known to have a dense atmosphere other than Earth, Titan is a home away from home (just a few hundred degrees colder!). As a bonus, you get striking views of the Rings of Saturn.</p>
+                  </div>
+                  <div className='flex flex-col w-full items-center text-center gap-4'>
+                    <div className='flex flex-col'>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>AVG. DISTANCE</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>1.6 BIL. KM</p>
+                    </div>
+                    <div>
+                      <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>EST. TRAVEL TIME</p>
+                      <p className='text-white font-[Bellefair] text-[1.8rem]'>7 YEARS</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
-const Crew = () => {
+const Crew = ({ crewVis, setCrewVis }) => {
   return (
-    <div className="bg-[url('./assets/crew/background-crew-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-6">
+    <section className="bg-[url('./assets/crew/background-crew-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top border-b-2 border-white/20 pb-4">
       <div className='flex flex-col w-full items-center justify-center p-6 py-4 mt-[96px] gap-12 pt-2'>
         <div className='font-["Barlow_Condensed"] text-[0.9rem] flex flex-row gap-4 tracking-[0.2rem] text-white'>
           <p className='font-bold opacity-25'>02</p>
           <p>MEET YOUR CREW</p>
         </div>
         <div className='flex flex-col text-center items-center gap-10'>
-          <div className='flex flex-col gap-4 px-4'>
-            <div className='flex flex-col'>
-              <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>COMMANDER</p>
-              <h1 className='text-white font-[Bellefair] text-[1.45rem]'>DOUGLAS HURLEY</h1>
-            </div>
-            <p className='font-[Barlow] text-[0.9rem] leading-6 text-[#D0D6F9]'>Douglas Gerald Hurley is an American engineer, former Marine Corps pilot and former NASA astronaut. He launched into space for the third time as commander of Crew Dragon Demo-2.</p>
+          <div className='flex flex-col gap-4 px-3'>
+            <AnimatePresence initial={false} mode='wait'>
+              {crewVis == 1 && (
+                <motion.div className='flex flex-col gap-4' key={crewVis}
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col'>
+                    <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>COMMANDER</p>
+                    <h2 className='text-white font-[Bellefair] text-[1.45rem]'>DOUGLAS HURLEY</h2>
+                  </div>
+                  <p className='font-[Barlow] text-[0.87rem] leading-6 text-[#D0D6F9]'>Douglas Gerald Hurley is an American engineer, former Marine Corps pilot and former NASA astronaut. He launched into space for the third time as commander of Crew Dragon Demo-2.</p>
+                </motion.div>
+              )}
+              {crewVis == 2 && (
+                <motion.div className='flex flex-col gap-4' key={crewVis}
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col'>
+                    <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>MISSION SPECIALIST</p>
+                    <h2 className='text-white font-[Bellefair] text-[1.45rem]'>MARK SHUTTLEWORTH</h2>
+                  </div>
+                  <p className='font-[Barlow] text-[0.87rem] leading-6 text-[#D0D6F9]'>Mark Richard Shuttleworth is the founder and CEO of Canonical, the company behind the Linux-based Ubuntu operating system. Shuttleworth became the first South African to travel to space as a space tourist.</p>
+                </motion.div>
+              )}
+              {crewVis == 3 && (
+                <motion.div className='flex flex-col gap-4' key={crewVis}
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col'>
+                    <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>PILOT</p>
+                    <h2 className='text-white font-[Bellefair] text-[1.45rem]'>VICTOR GLOVER</h2>
+                  </div>
+                  <p className='font-[Barlow] text-[0.87rem] leading-6 text-[#D0D6F9]'>Pilot on the first operational flight of the SpaceX Crew Dragon to the International Space Station. Glover is a commander in the U.S. Navy where he pilots an F/A-18.He was a crew member of Expedition 64, and served as a station systems flight engineer. </p>
+                </motion.div>
+              )}
+              {crewVis == 4 && (
+                <motion.div className='flex flex-col gap-4' key={crewVis}
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <div className='flex flex-col'>
+                    <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>FLIGHT ENGINEER</p>
+                    <h2 className='text-white font-[Bellefair] text-[1.45rem]'>ANOUSHEH ANSARI</h2>
+                  </div>
+                  <p className='font-[Barlow] text-[0.87rem] leading-6 text-[#D0D6F9]'>Anousheh Ansari is an Iranian American engineer and co-founder of Prodea Systems. Ansari was the fourth self-funded space tourist, the first self-funded woman to fly to the ISS, and the first Iranian in space.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div className='flex flex-row w-full items-center justify-center gap-4 mt-14'>
-              <div className='w-2.5 h-2.5 bg-white opacity-25 rounded-full'></div>
-              <div className='w-2.5 h-2.5 bg-white opacity-25 rounded-full'></div>
-              <div className='w-2.5 h-2.5 bg-white opacity-25 rounded-full'></div>
-              <div className='w-2.5 h-2.5 bg-white opacity-25 rounded-full'></div>
+              {[1,2,3,4].map(e => (
+                <button className={`${crewVis == e ? "opacity-100" : "opacity-25"} w-2.5 h-2.5 bg-white rounded-full`} onClick={() => setCrewVis(e)}></button>
+              ))}
             </div>
           </div>
-          <div className='w-full px-12 ml-4 mask-b-from-80%'>
-            <img src={dh} alt="" className='w-full h-full object-cover'/>
+          <div className='w-full mask-b-from-80% h-[315px] overflow-hidden flex flex-row items-center justify-center mt-4'>
+            <AnimatePresence mode='wait' initial={false}>
+            {crewVis == 1 && (
+              <motion.div className='relative w-58 h-full'
+                key={crewVis} 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+              >
+                <img src={dh} alt="" className='inset-0 absolute h-full object-cover'
+                />
+              </motion.div>
+            )}
+            {crewVis == 2 && (
+              <motion.div className='relative w-54 h-full'
+                key={crewVis} 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+              >
+                <img src={ms} alt="" className='inset-0 absolute h-full object-cover'
+                />
+              </motion.div>
+            )}
+            {crewVis == 3 && (
+              <motion.div className='relative w-66 h-full'
+                key={crewVis} 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+              >
+                <img src={vg} alt="" className='inset-0 absolute h-full object-cover'
+                />
+              </motion.div>
+            )}
+            {crewVis == 4 && (
+              <motion.div className='relative w-74 h-full'
+                key={crewVis} 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{duration: 0.4, ease: 'easeInOut'}}
+              >
+                <img src={aa} alt="" className='inset-0 absolute h-full object-cover'
+                />
+              </motion.div>
+            )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
@@ -134,27 +388,30 @@ const variants = {
   initial: (direction: number) => ({
     x: direction === 1 ? '100%' : direction === -1 ? '-100%' : 0,
     y: direction === 0 ? '20%' : 0,
+    opacity: 0
   }),
   animate: {
     x: 0,
     y: 0,
+    opacity: 100
   },
   exit: (direction: number) => ({
     x: direction === 1 ? '-100%' : direction === -1 ? '100%' : 0,
     y: direction === 0 ? '-20%' : 0,
+    opacity: 0
   })
 }
 
-const Technology = ({ technologyVis, setTechnologyVis, direction, leftTechClick, rightTechClick }) => {
+const Technology = ({ technologyVis, direction, leftTechClick, rightTechClick }) => {
   return (
-    <div className="bg-[url('./assets/technology/background-technology-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top pb-6">
+    <section className="bg-[url('./assets/technology/background-technology-mobile.jpg')] flex flex-col w-full h-full bg-cover bg-top pb-6">
       <div className='flex flex-col w-full items-center justify-center py-4 mt-[96px] gap-18 pt-2'>
         <div className='font-["Barlow_Condensed"] text-[0.9rem] flex flex-row gap-4 tracking-[0.2rem] text-white'>
           <p className='font-bold opacity-25'>03</p>
           <p>SPACE LAUNCH 101</p>
         </div>
         <div className='flex flex-col text-center items-center gap-8 w-full'>
-          <div className='h-[258px] w-full relative'>
+          <div className='h-[258px] w-full relative overflow-hidden'>
             <AnimatePresence custom={direction} initial={false}>
             {technologyVis == 1 && (
               <motion.img src={launchPort} alt=""
@@ -164,23 +421,11 @@ const Technology = ({ technologyVis, setTechnologyVis, direction, leftTechClick,
                 initial='initial'
                 animate='animate'
                 exit='exit'
-                transition={{duration: 0.4, ease: 'easeInOut'}}
+                transition={{duration: 0.6, ease: 'easeInOut'}}
                 className='absolute inset-0 w-full h-full object-cover'
               />
             )}
             {technologyVis == 2 && (
-              <motion.img src={capsulePort} alt=""
-                key={technologyVis} 
-                custom={direction}
-                variants={variants}
-                initial='initial'
-                animate='animate'
-                exit='exit'
-                transition={{duration: 0.4, ease: 'easeInOut'}}
-                className='absolute inset-0 w-full h-full object-cover'
-              />
-            )}
-            {technologyVis == 3 && (
               <motion.img src={spacePort} alt=""
                 key={technologyVis} 
                 custom={direction}
@@ -188,7 +433,19 @@ const Technology = ({ technologyVis, setTechnologyVis, direction, leftTechClick,
                 initial='initial'
                 animate='animate'
                 exit='exit'
-                transition={{duration: 0.4, ease: 'easeInOut'}}
+                transition={{duration: 0.6, ease: 'easeInOut'}}
+                className='absolute inset-0 w-full h-full object-cover'
+              />
+            )}
+            {technologyVis == 3 && (
+              <motion.img src={capsulePort} alt=""
+                key={technologyVis} 
+                custom={direction}
+                variants={variants}
+                initial='initial'
+                animate='animate'
+                exit='exit'
+                transition={{duration: 0.6, ease: 'easeInOut'}}
                 className='absolute inset-0 w-full h-full object-cover'
               />
             )}
@@ -201,12 +458,45 @@ const Technology = ({ technologyVis, setTechnologyVis, direction, leftTechClick,
           </div>
           <div className='flex flex-col items-center text-center gap-2 px-8'>
             <p className='text-white/50 font-[Bellefair] text-[1.1rem]'>THE TERMINOLOGY...</p>
-            <h1 className='text-white font-[Bellefair] text-[1.45rem]'>LAUNCH VEHICLE</h1>
-            <p className='font-[Barlow] text-[0.89rem] leading-[1.6rem] text-[#D0D6F9] mt-1'>A launch vehicle or carrier rocket is a rocket-propelled vehicle used to carry a payload from Earth's surface to space, usually to Earth orbit or beyond. Our WEB-X carrier rocket is the most powerful in operation. Standing 150 metres tall, it's quite an awe-inspiring sight on the launch pad!</p>
+            <AnimatePresence initial={false} mode='wait'>
+              {technologyVis == 1 && (
+                <motion.div className='flex flex-col gap-2' key={technologyVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <h2 className='text-white font-[Bellefair] text-[1.45rem]'>LAUNCH VEHICLE</h2>
+                  <p className='font-[Barlow] text-[0.9rem] leading-[1.6rem] text-[#D0D6F9] mt-1'>A launch vehicle or carrier rocket is a rocket-propelled vehicle used to carry a payload from Earth's surface to space, usually to Earth orbit or beyond. Our WEB-X carrier rocket is the most powerful in operation. Standing 150 metres tall, it's quite an awe-inspiring sight on the launch pad!</p>
+                </motion.div>
+              )}
+              {technologyVis == 2 && (
+                <motion.div className='flex flex-col gap-2' key={technologyVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <h2 className='text-white font-[Bellefair] text-[1.45rem]'>SPACEPORT</h2>
+                  <p className='font-[Barlow] text-[0.9rem] leading-[1.6rem] text-[#D0D6F9] mt-1'>A spaceport or cosmodrome is a site for launching (or receiving) spacecraft, by analogy to the seaport for ships or airport for aircraft. Based in the famous Cape Canaveral, our spaceport is ideally situated to take advantage of the Earth’s rotation for launch.</p>
+                </motion.div>
+              )}
+              {technologyVis == 3 && (
+                <motion.div className='flex flex-col gap-2' key={technologyVis}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{duration: 0.4, ease: 'easeInOut'}}
+                >
+                  <h2 className='text-white font-[Bellefair] text-[1.45rem]'>SPACE CAPSULE</h2>
+                  <p className='font-[Barlow] text-[0.9rem] leading-[1.6rem] text-[#D0D6F9] mt-1'>A space capsule is an often-crewed spacecraft that uses a blunt-body reentry capsule to reenter the Earth's atmosphere without wings. Our capsule is where you'll spend your time during the flight. It includes a space gym, cinema, and plenty of other activities to keep you entertained.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
@@ -220,6 +510,8 @@ const sections = [
 function App() {
   const [index, setIndex] = useState(0)
   const [technologyVis, setTechnologyVis] = useState(1)
+  const [crewVis, setCrewVis] = useState(1)
+  const [destVis, setDestVis] = useState(1)
   const [direction, setDirection] = useState(1)
   const indexRef = useRef(0)
   const isAnimating = useRef(false)
@@ -263,18 +555,18 @@ function App() {
   }
 
   if (isMobile) return (
-    <div className="flex flex-col w-full">
-      <Header index={index} setIndex={setIndex} sections={sections} isAnimating={isAnimating} /> 
+    <main className="flex flex-col w-full">
+      <MobileHeader index={index} setIndex={setIndex} sections={sections} isAnimating={isAnimating} /> 
       {sections.map(({ Component }, i) => (
-        <Component isAnimating={isAnimating} index={index} setIndex={setIndex} isActive={i === index} technologyVis={technologyVis} setTechnologyVis={setTechnologyVis} direction={direction} rightTechClick={rightTechClick} leftTechClick={leftTechClick} />
+        <Component isAnimating={isAnimating} index={index} setIndex={setIndex} technologyVis={technologyVis} direction={direction} rightTechClick={rightTechClick} leftTechClick={leftTechClick} crewVis={crewVis} setCrewVis={setCrewVis} destVis={destVis} setDestVis={setDestVis}/>
       ))}
-    </div>
+    </main>
   )
 
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
-      <Header index={index} setIndex={setIndex} sections={sections} isAnimating={isAnimating} /> 
+    <main className="fixed inset-0 overflow-hidden">
+      <DesktopHeader index={index} setIndex={setIndex} sections={sections} isAnimating={isAnimating} /> 
       <motion.div
         className="flex flex-row h-full"
         animate={{ x: `-${index * 100}%` }}
@@ -282,11 +574,11 @@ function App() {
       >
         {sections.map(({ Component }, i) => (
           <section key={i} className="h-screen w-full flex-shrink-0 flex">
-            <Component isAnimating={isAnimating} index={index} setIndex={setIndex} technologyVis={technologyVis} isActive={i === index}/>
+            <Component isAnimating={isAnimating} index={index} setIndex={setIndex} technologyVis={technologyVis} direction={direction} rightTechClick={rightTechClick} leftTechClick={leftTechClick} crewVis={crewVis} setCrewVis={setCrewVis} destVis={destVis} setDestVis={setDestVis}/>
           </section>
         ))}
       </motion.div>
-    </div>
+    </main>
   )
 }
 
