@@ -537,7 +537,6 @@ function App() {
   const isMobile = useMediaQuery({ maxWidth: 1023 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023  });
 
-  console.log(technologyVis)
 
   useEffect(() => {
     indexRef.current = index
@@ -570,8 +569,6 @@ function App() {
 
     return () => clearTimeout(timer)
   }, [crewVis])
-
-  console.log(crewVis)
 
   const leftTechClick = (i: number) => {
     setDirection(-1)
